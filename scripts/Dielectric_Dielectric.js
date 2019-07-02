@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 $(window).on('load', function() {//main
     const dom = {//assigning switches and slider
 
@@ -77,13 +78,13 @@ class Wave{//class handles the creation of waves
         this.B_0 = E_0;// for simplicity B and E field are the same magnitude
         this.polarisation = polarisation;
         this.sinusoids = this.create_sinusoids();
-    };
+    }
 
     element_sine(matrix,size){//take element sine in matrix (cosine and sine interchangeable)
         for (let i = 0;i < size;i++){
             matrix[i] = math.sin(matrix[i]);
         }
-        return matrix
+        return matrix;
     }
 
     create_sinusoids()//crate waves
@@ -144,8 +145,8 @@ class Wave{//class handles the creation of waves
             }
         );
 
-        return [E_trace, B_trace] //return traces
-    };
+        return [E_trace, B_trace]; //return traces
+    }
 
     transmit(n2){
 
@@ -156,24 +157,24 @@ class Wave{//class handles the creation of waves
         let E_t0;
 
         if (isNaN(theta_t) === true){//if snells law return not a number this means total internal refection is occurring hence no transmitted wave
-                return false
+                return false;
         }
         else {
             if (this.polarisation === "s-polarisation") {//change amplitude
-                E_t0 = this.E_0 * (2. * this.n1 * Math.cos(theta_i)) / (this.n1 * Math.cos(theta_i) + this.n2 * Math.cos(theta_t))
+                E_t0 = this.E_0 * (2 * this.n1 * Math.cos(theta_i)) / (this.n1 * Math.cos(theta_i) + this.n2 * Math.cos(theta_t));
             } else {
-                E_t0 = this.E_0 * (2. * this.n1 * Math.cos(theta_i)) / (this.n1 * Math.cos(theta_t) + this.n2 * Math.cos(theta_i))
+                E_t0 = this.E_0 * (2 * this.n1 * Math.cos(theta_i)) / (this.n1 * Math.cos(theta_t) + this.n2 * Math.cos(theta_i));
             }
-            return new Wave(plot_theta_t, E_t0, this.polarisation, this.true_w, this.n2)//create transmitted wave
+            return new Wave(plot_theta_t, E_t0, this.polarisation, this.true_w, this.n2);//create transmitted wave
         }
-       };
+       }
 
     reflect(n2)
     {
         this.n2 = n2;
 
         if (this.n1 === this.n2) {//if both materials have same refractive index then there is no reflection
-            return false
+            return false;
         }
         else {
             let theta_i = this.theta;
@@ -184,18 +185,18 @@ class Wave{//class handles the creation of waves
             let E_r0;
 
             if (isNaN(theta_t) === true){
-                E_r0 = this.E_0
+                E_r0 = this.E_0;
             }
             else if (this.polarisation === "s-polarisation") {
-                E_r0 = this.E_0 * (this.n1 * Math.cos(theta_i) - this.n2 * Math.cos(theta_t)) / (this.n1 * Math.cos(theta_i) + this.n2 * Math.cos(theta_t))
+                E_r0 = this.E_0 * (this.n1 * Math.cos(theta_i) - this.n2 * Math.cos(theta_t)) / (this.n1 * Math.cos(theta_i) + this.n2 * Math.cos(theta_t));
             }
             else {
-                E_r0 = this.E_0 * (this.n1 * Math.cos(theta_t) - this.n2 * Math.cos(theta_i)) / (this.n1 * Math.cos(theta_t) + this.n2 * Math.cos(theta_i))
+                E_r0 = this.E_0 * (this.n1 * Math.cos(theta_t) - this.n2 * Math.cos(theta_i)) / (this.n1 * Math.cos(theta_t) + this.n2 * Math.cos(theta_i));
             }
 
-            return new Wave(plot_theta_r, E_r0, this.polarisation, this.true_w, this.n1)//create reflected wave
+            return new Wave(plot_theta_r, E_r0, this.polarisation, this.true_w, this.n1);//create reflected wave
         }
-    };
+    }
 
     rotate_sinusoid(sinusoid, theta)//rotate the sine waves
     {
@@ -207,13 +208,13 @@ class Wave{//class handles the creation of waves
         }
 
         let rotated = math.transpose(copy);
-        return  rotated
-    };
+        return  rotated;
+    }
 }
 
     function snell(n1, n2, theta_i){//snells law
-        return Math.asin((n1 / n2) * Math.sin(theta_i))
-    };
+        return Math.asin((n1 / n2) * Math.sin(theta_i));
+    }
 
 
     function computeData() {
@@ -248,7 +249,7 @@ class Wave{//class handles the creation of waves
 
         if((1 < refractive_ratio) && (refractive_ratio <= parseFloat($("#refractive-index-ratio").attr("max")))){//decide opacity dependant on refractive index
             opacity_1 = 0;
-            opacity_2 = refractive_ratio/(2*parseFloat($("#refractive-index-ratio").attr("max")))
+            opacity_2 = refractive_ratio/(2*parseFloat($("#refractive-index-ratio").attr("max")));
         }
         else if((parseFloat($("#refractive-index-ratio").attr("min")) <= refractive_ratio) && (refractive_ratio< 1)){
             opacity_1 = parseFloat($("#refractive-index-ratio").attr("min"))/(2*refractive_ratio);
@@ -319,7 +320,7 @@ class Wave{//class handles the creation of waves
             }
         }
 
-        return plot_data
+        return plot_data;
     }
 
     function compute_fresnel(){//produce data for fresnel curves
@@ -364,7 +365,7 @@ class Wave{//class handles the creation of waves
                     t_marker = 2 * Math.cos(theta_i) / (Math.cos(theta_t) + (ratio * Math.cos(theta_i)));
                     r_marker = (Math.cos(theta_t) - ratio * Math.cos(theta_i)) / (Math.cos(theta_t) + ratio * Math.cos(theta_i));
                 }
-            };
+            }
 
 
             if (polarisation_value === "s-polarisation"){
@@ -427,7 +428,7 @@ class Wave{//class handles the creation of waves
                         data[2].push(r);
                     }
                 }
-            };
+            }
 
             let Transmission = {
               x: data[0],
@@ -464,10 +465,10 @@ class Wave{//class handles the creation of waves
                 name: 'Reflection coefficient',
                 marker: {color: "#002147", size: 12}
             };
-        let fresnel_data = [Transmission,marker_transmission,Reflection,marker_reflection]
+        let fresnel_data = [Transmission,marker_transmission,Reflection,marker_reflection];
 
-        return fresnel_data
-    };
+        return fresnel_data;
+    }
 
     function update_graph(){//update animation
 
@@ -490,8 +491,8 @@ class Wave{//class handles the creation of waves
                 frame: {duration: 0, redraw: false,},
                 mode: "afterall"
             }
-        )
-    };
+        );
+    }
 
     function play_loop(){
         if(isPlay === true) {
@@ -507,7 +508,7 @@ class Wave{//class handles the creation of waves
             requestAnimationFrame(play_loop);
         }
         return 0;
-    };
+    }
 
     function initial(){
 
