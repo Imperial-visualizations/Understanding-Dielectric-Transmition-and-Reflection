@@ -72,6 +72,7 @@ $(window).on('load', function() {//main
             z_square.push(z_row);
         }
         return z_square
+        
     }
 
     function getData_wave_reflected(){//produce data of reflected wave
@@ -99,9 +100,7 @@ $(window).on('load', function() {//main
 
         if (isNaN(theta_t)=== true){//evanescent waves produced
             let k_x = (angular_frequency_ratio*Math.sqrt((n1*Math.sin(theta_i))^2-(n2)^2))/c;
-            console.log(k_x);
             let decay = element_exponential(math.multiply(k_x/10, numeric.linspace(0, -2, size)), size);//exponential decay of amplitude
-            console.log(decay);
 
             for (let v=0;v < y_data.length ;v++) {
                 let z_row = [];
@@ -163,7 +162,6 @@ $(window).on('load', function() {//main
         angle_of_incidence = parseFloat($("input#angle").val());
         angular_frequency_ratio = parseFloat($("input#angular_frequency").val())* w_0;
         w_r = parseFloat($("input#angular_frequency").val());
-
         //calculate the real refractive index in second material
         n2 = 1 - (w_d_squared * (Math.pow(angular_frequency_ratio, 2) - Math.pow(w_0, 2)) / (Math.pow((Math.pow(angular_frequency_ratio, 2) - Math.pow(w_0, 2)), 2) + Math.pow(angular_frequency_ratio, 2) * Math.pow(gamma, 2)));
 
@@ -268,12 +266,12 @@ $(window).on('load', function() {//main
                 k: [0, 7, 2, 3, 6, 7, 1, 1, 5, 5, 7, 6],
             };
         data.push(transmitted_wave,material_1,material_2);
-
-    console.log(data);
+    
     return data
     }
 
     function update_graph(){//update animation
+        
         Plotly.animate("graph",
             {data: plot_data()},//updated data
             {
