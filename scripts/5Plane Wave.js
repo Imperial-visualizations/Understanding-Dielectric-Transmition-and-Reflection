@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 $(window).on('load', function() {//main
     const dom = {//define inputs
             tswitch: $("#wave-switch input"),
@@ -6,6 +7,16 @@ $(window).on('load', function() {//main
     };
 
     let layout = {//define layout of pot
+            autosize: false,
+            width: 600,
+            height: 600,
+            margin: {
+                l: 50,
+                r: 50,
+                b: 100,
+                t: 100,
+                pad: 4
+            },    
             showlegend: false,
             scene: {
                 aspectmode: "cube",
@@ -39,10 +50,10 @@ $(window).on('load', function() {//main
 
     function snell(theta_i){//snells law
         console.log(Math.sin(theta_i));
-        console.log((n1 / n2))
+        console.log((n1 / n2));
         return Math.asin((n1 / n2) * Math.sin(theta_i));
 
-    };
+    }
 
     function getData_wave_incident(){//produces data for the incident wave on the boundry
 
@@ -58,7 +69,7 @@ $(window).on('load', function() {//main
             }
             z_square.push(z_row);
         }
-        return z_square
+        return z_square;
     }
 
     function getData_wave_reflected(){//produces data for the reflected wave on the boundry
@@ -76,7 +87,7 @@ $(window).on('load', function() {//main
             }
             z_square.push(z_row);
         }
-        return z_square
+        return z_square;
     }
 
     function getData_wave_transmitted(){//produces data for the incident wave on the boundry
@@ -93,24 +104,24 @@ $(window).on('load', function() {//main
             }
         z_square.push(z_row);//Not entirelly sure the physics is correct need to review
         }
-        return z_square
+        return z_square;
     }
 
     function transmit(){//gives the new amplitude of the transmitted wave
         let E_t0;
 
         if (isNaN(theta_t) === true){//if snells law return not a number this means total internal refection is occurring hence no transmitted wave(no attenuation accounted for)
-                return 0
+                return 0;
         }
         else {
-                E_t0 = E_0 * (2. * n1 * Math.cos(theta_i)) / (n1 * Math.cos(theta_i) + n2 * Math.cos(theta_t))
-            return E_t0
+                E_t0 = E_0 * (2 * n1 * Math.cos(theta_i)) / (n1 * Math.cos(theta_i) + n2 * Math.cos(theta_t));
+            return E_t0;
         }
-       };
+       }
 
     function reflect() {//gives the amplitude of the refected wave
         if (n1 === n2) {//if both materials have same refractive index then there is no reflection
-            return 0
+            return 0;
         }
         else {
             let E_r0;
@@ -118,11 +129,11 @@ $(window).on('load', function() {//main
                 E_r0 = E_0;
             }
             else {
-                E_r0 = E_0 * (n1 * Math.cos(theta_i) - n2 * Math.cos(theta_t)) / (n1 * Math.cos(theta_i) + n2 * Math.cos(theta_t))
+                E_r0 = E_0 * (n1 * Math.cos(theta_i) - n2 * Math.cos(theta_t)) / (n1 * Math.cos(theta_i) + n2 * Math.cos(theta_t));
             }
-            return E_r0
+            return E_r0;
         }
-    };
+    }
 
     function plot_data() {//produces the traces of the plot
 
@@ -193,7 +204,7 @@ $(window).on('load', function() {//main
         let opacity_2;
         if((1 < n2) && (n2 <= 15)){//decide opacity dependant on refractive index
             opacity_1 = 0;
-            opacity_2 = n2/10
+            opacity_2 = n2/10;
         }
         else if((0.1 <= n2) && (n2< 1)){
             opacity_1 = 0.1/n2;
@@ -243,11 +254,11 @@ $(window).on('load', function() {//main
                         x: [0],
                         y: [0],
                         z: [0]
-                    }
+                        }
                 );
             }
     }
-    return data
+    return data;
     }
 
     function update_graph(){//update animation
@@ -260,7 +271,7 @@ $(window).on('load', function() {//main
                 mode: "afterall"
             }
         );
-    };
+    }
 
     function play_loop(){//handles the play button
         if(isPlay === true) {
@@ -276,7 +287,7 @@ $(window).on('load', function() {//main
             requestAnimationFrame(play_loop);//prepares next frame
         }
         return 0;
-    };
+    }
 
     function initial() {
         Plotly.purge("graph");
@@ -292,6 +303,6 @@ $(window).on('load', function() {//main
             w_t = 0;//reset time to 0
             requestAnimationFrame(play_loop);
         });
-    };
+    }
 initial();
 });
