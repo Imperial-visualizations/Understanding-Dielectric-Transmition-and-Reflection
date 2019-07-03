@@ -68,7 +68,7 @@ let size = 100;//give number of points
 let z_range = numeric.linspace(0, 1, size);
 
 class Wave{//class handles the creation of waves
-    constructor(theta, E_0, polarisation, w , n1){
+    constructor(theta, E_0, polarisation, w , n1, w_t_test){
         this.theta = theta;
         this.n1 = n1;
         this.E_0 = E_0;
@@ -77,7 +77,10 @@ class Wave{//class handles the creation of waves
         this.k = (n1 * this.w)/ c;
         this.B_0 = E_0;// for simplicity B and E field are the same magnitude
         this.polarisation = polarisation;
+        this.w_t_test = w_t_test;
         this.sinusoids = this.create_sinusoids();
+        
+        
     }
 
     element_sine(matrix,size){//take element sine in matrix (cosine and sine interchangeable)
@@ -90,8 +93,7 @@ class Wave{//class handles the creation of waves
     create_sinusoids()//crate waves
     {
         let zero = math.zeros(size);
-        console.log(this.k);
-        let k_z_sine = math.multiply(-1,this.element_sine(math.add(w_t,math.multiply(this.k,z_range)),size));//make sine matrix
+        let k_z_sine = math.multiply(-1,this.element_sine(math.add(this.w_t_test,math.multiply(this.k,z_range)),size));//make sine matrix
         let E_sine,B_sine;
         let rot_E_sine;
         let rot_B_sine;
@@ -105,11 +107,20 @@ class Wave{//class handles the creation of waves
         }else{
             E_sine = [math.multiply(this.E_0, k_z_sine), zero, z_range];
             B_sine = [zero, math.multiply(this.B_0, k_z_sine), z_range];
+            
             rot_E_sine = this.rotate_sinusoid(E_sine, this.theta);
             rot_B_sine = this.rotate_sinusoid(B_sine, this.theta);
         }
 
         let E_trace = [];
+        //console.log("E field");
+        //console.log(E_sine[0][0]);
+        //console.log(E_sine[1][0]);
+        //console.log(E_sine[2][0]);
+        //console.log("B field");
+        //console.log(B_sine[0][0]);
+        //console.log(B_sine[1][0]);
+        //console.log(B_sine[2][0]);
 
         E_trace.push(
             {//electric field trace
@@ -164,7 +175,7 @@ class Wave{//class handles the creation of waves
             } else {
                 E_t0 = this.E_0 * (2 * this.n1 * Math.cos(theta_i)) / (this.n1 * Math.cos(theta_t) + this.n2 * Math.cos(theta_i));
             }
-            return new Wave(plot_theta_t, E_t0, this.polarisation, this.true_w, this.n2);//create transmitted wave
+            return new Wave(plot_theta_t, E_t0, this.polarisation, this.true_w, this.n2, -this.w_t_test);//create transmitted wave
         }
        }
 
@@ -193,7 +204,7 @@ class Wave{//class handles the creation of waves
                 E_r0 = this.E_0 * (this.n1 * Math.cos(theta_t) - this.n2 * Math.cos(theta_i)) / (this.n1 * Math.cos(theta_t) + this.n2 * Math.cos(theta_i));
             }
 
-            return new Wave(plot_theta_r, E_r0, this.polarisation, this.true_w, this.n1);//create reflected wave
+            return new Wave(plot_theta_r, E_r0, this.polarisation, this.true_w, this.n1, -this.w_t_test);//create reflected wave
         }
     }
 
@@ -226,9 +237,14 @@ class Wave{//class handles the creation of waves
         refractive_ratio   = parseFloat($("input#refractive-index-ratio").val());
 
         let rad_angle = Math.PI * (angle_of_incidence / 180);
-
-        let Incident = new Wave(rad_angle, amplitude, polarisation_value, angular_frequency*1e15, refractive_ratio/refractive_ratio, 2);//create incident wave
+        //(theta, E_0, polarisation, w , n1, w_t_test)
+        //console.log("Incident");
+        let Incident = new Wave(rad_angle, amplitude, polarisation_value, angular_frequency*1e15, refractive_ratio/refractive_ratio, w_t);//create incident wave
+        //console.log("Reflected");
+        // console.log(Incident.sinusoids[0].y);
+        // console.log(Incident.sinusoids[0].z);
         let Reflected = Incident.reflect(refractive_ratio);//create reflected wave
+        //console.log("Transmitted");
         let Transmitted = Incident.transmit(refractive_ratio);//create transmitted wave
 
         if (isNaN(Math.asin(refractive_ratio))=== true){//update value of citical angle
@@ -318,7 +334,7 @@ class Wave{//class handles the creation of waves
                 );
             }
         }
-
+        //console.log(plot_data);
         return plot_data;
     }
 
@@ -477,7 +493,7 @@ class Wave{//class handles the creation of waves
                 fromcurrent: true,
                 transition: {duration: 0,},
                 frame: {duration: 0, redraw: false,},
-                mode: "afterall"
+                mode: "immediate"
             }
         );
 
@@ -488,7 +504,9 @@ class Wave{//class handles the creation of waves
                 fromcurrent: true,
                 transition: {duration: 0,},
                 frame: {duration: 0, redraw: false,},
-                mode: "afterall"
+                //mode: "afterall"
+                mode: "immediate"
+
             }
         );
     }
@@ -502,7 +520,9 @@ class Wave{//class handles the creation of waves
                     fromcurrent: true,
                     transition: {duration: 0,},
                     frame: {duration: 0, redraw: false,},
-                    mode: "afterall"
+                    //mode: "afterall"
+                    mode: "immediate"
+
                 });
             requestAnimationFrame(play_loop);
         }
