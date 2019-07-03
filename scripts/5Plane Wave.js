@@ -8,13 +8,13 @@ $(window).on('load', function() {//main
 
     let layout = {//define layout of pot
             autosize: false,
-            width: 600,
-            height: 600,
+            width: 800,
+            height: 800,
             margin: {
                 l: 50,
                 r: 50,
-                b: 100,
-                t: 100,
+                b: 50,
+                t: 50,
                 pad: 4
             },    
             showlegend: false,
@@ -52,7 +52,6 @@ $(window).on('load', function() {//main
         console.log(Math.sin(theta_i));
         console.log((n1 / n2));
         return Math.asin((n1 / n2) * Math.sin(theta_i));
-
     }
 
     function getData_wave_incident(){//produces data for the incident wave on the boundry
@@ -164,7 +163,8 @@ $(window).on('load', function() {//main
                 y: y_data,
                 z: getData_wave_incident(),
                 type: 'surface',
-                name: "Incident"
+                name: "Incident",
+                showscale: false,
             };
             data.push(incident_wave);
         }
@@ -175,7 +175,8 @@ $(window).on('load', function() {//main
                 y: y_data,
                 z: getData_wave_reflected(),
                 type: 'surface',
-                name: "Reflected"
+                name: "Reflected",
+                showscale: false
             };
             data.push(reflected_wave);
         }
@@ -186,7 +187,8 @@ $(window).on('load', function() {//main
                 y: y_data,
                 z: math.add(getData_wave_incident(),getData_wave_reflected()),
                 type: 'surface',
-                name:"Reflected and Incident combined"
+                name:"Reflected and Incident combined",
+                showscale: false
             };
             data.push(incident_plus_reflected_wave);
         }
@@ -197,7 +199,8 @@ $(window).on('load', function() {//main
             y: y_data,
             z: getData_wave_transmitted(),
             type: 'surface',
-            name:"Transmitted"
+            name:"Transmitted",
+            showscale: false
         };
 
         let opacity_1;//opacity gives qualitative representation of refractive index
@@ -268,7 +271,7 @@ $(window).on('load', function() {//main
                 fromcurrent: true,
                 transition: {duration: 0,},
                 frame: {duration: 0, redraw: false,},
-                mode: "afterall"
+                mode: "immediate"
             }
         );
     }
@@ -282,7 +285,7 @@ $(window).on('load', function() {//main
                     fromcurrent: true,
                     transition: {duration: 0,},
                     frame: {duration: 0, redraw: false,},
-                    mode: "afterall"
+                    mode: "immediate"
                 });
             requestAnimationFrame(play_loop);//prepares next frame
         }
