@@ -9,6 +9,15 @@ $(window).on('load', function() {//main
 
     let plt = {
         layout: {
+            width: 800,
+            height: 800,
+            margin: {
+                l: 5,
+                r: 25,
+                b: 5,
+                t: 25,
+                pad: 4
+            },
             showlegend: false,
             showscale: false,
             colorbar: false,
@@ -83,7 +92,7 @@ $(window).on('load', function() {//main
         let k_y = Math.sin(-theta_i)*k_1;
         let E_0_r = reflect();
 
-        for (let v=0;v < y_data.length ;v++) {
+        for (let v=0; v < y_data.length ; v++) {
             let z_row = [];
             for (let i = 0; i < x_data.length ; i++) {
                 z = E_0_r*Math.sin(k_x* x_data[i]+k_y*y_data[v]-w_r*t);//note the different sign for the time evolution
@@ -99,11 +108,11 @@ $(window).on('load', function() {//main
         let E_0_t = transmit();
         let k_y = Math.sin(theta_i)*k_1;
 
-        if (isNaN(theta_t)=== true){//evanescent waves produced
+        if (isNaN(theta_t) === true){//evanescent waves produced
             let k_x = (angular_frequency_ratio*Math.sqrt((n1*Math.sin(theta_i))^2-(n2)^2))/c;
             let decay = element_exponential(math.multiply(k_x/10, numeric.linspace(0, -2, size)), size);//exponential decay of amplitude
 
-            for (let v=0;v < y_data.length ;v++) {
+            for (let v=0; v<y_data.length; v++) {
                 let z_row = [];
                 for (let i = 0; i < x_data_t.length ; i++) {
                     z = E_0* Math.sin(k_y*y_data[v]+w_r*t);
@@ -190,7 +199,8 @@ $(window).on('load', function() {//main
                 y: y_data,
                 z: getData_wave_incident(),
                 type: 'surface',
-                name: "Incident"
+                name: "Incident",
+                showscale: false,
             };
             data.push(incident_wave);
         }
@@ -201,7 +211,8 @@ $(window).on('load', function() {//main
                 y: y_data,
                 z: getData_wave_reflected(),
                 type: 'surface',
-                name: "Reflected"
+                name: "Reflected",
+                showscale: false,
             };
             data.push(reflected_wave);
         }
@@ -212,7 +223,8 @@ $(window).on('load', function() {//main
                 y: y_data,
                 z: math.add(getData_wave_incident(),getData_wave_reflected()),
                 type: 'surface',
-                name:"Reflected and Incident combined"
+                name:"Reflected and Incident combined",
+                showscale: false,
             };
             data.push(incident_plus_reflected_wave);
         }
@@ -223,7 +235,8 @@ $(window).on('load', function() {//main
             y: y_data,
             z: getData_wave_transmitted(),
             type: 'surface',
-            name:"Transmitted"
+            name:"Transmitted",
+            showscale: false,
         };
 
         let opacity_1;//opacity is based off the refractive index gives qualatative representation
@@ -269,7 +282,7 @@ $(window).on('load', function() {//main
             };
         data.push(transmitted_wave,material_1,material_2);
     
-    return data
+    return data;
     }
 
     function update_graph(){//update animation
@@ -280,9 +293,25 @@ $(window).on('load', function() {//main
                 fromcurrent: true,
                 transition: {duration: 0,},
                 frame: {duration: 0, redraw: false,},
-                mode: "afterall"
+                //mode: "afterall"
+                mode: "immediate"
             }
         );
+        let transm_data = getData_wave_incident();
+        let refl_data = getData_wave_reflected();
+        let incid_data = getData_wave_incident();
+        //console.log(incid_data[0]);
+        let sum;
+
+        for (let i=0; i<incid_data.length; i++){
+            for (let j=0; j<incid_data.length; j++){
+                sum = incid_data[i][j] + refl_data[i][j] - transm_data[i][j];
+                if (Math.abs(sum) > 0.1){
+                    console.log(sum);
+                    console.log('diff > 1');
+                }
+            }
+        }
     }
 
     function play_loop(){//adds time evolution
@@ -294,7 +323,8 @@ $(window).on('load', function() {//main
                     fromcurrent: true,
                     transition: {duration: 0,},
                     frame: {duration: 0, redraw: false,},
-                    mode: "afterall"
+                    //mode: "afterall"
+                    mode: "immediate"
                 });
             requestAnimationFrame(play_loop);//loads next frame
         }
