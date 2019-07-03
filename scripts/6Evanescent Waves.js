@@ -1,3 +1,5 @@
+/*jshint esversion: 7*/
+
 $(window).on('load', function() {//main
     const dom = {
             tswitch: $("#wave-switch input"),
@@ -48,13 +50,13 @@ $(window).on('load', function() {//main
     function snell(theta_i){//snells law
         return Math.asin((n1 / n2) * Math.sin(theta_i));
 
-    };
+    }
 
     function element_exponential(matrix,size){//take exponential of element in matrix
         for (let i = 0;i < size;i++){
             matrix[i] = math.exp(matrix[i]);
         }
-    return matrix
+    return matrix;
     }
 
     function getData_wave_incident(){//produce data of incident wave
@@ -71,8 +73,7 @@ $(window).on('load', function() {//main
             }
             z_square.push(z_row);
         }
-        return z_square
-        
+        return z_square;
     }
 
     function getData_wave_reflected(){//produce data of reflected wave
@@ -90,7 +91,7 @@ $(window).on('load', function() {//main
             }
             z_square.push(z_row);
         }
-        return z_square
+        return z_square;
     }
 
     function getData_wave_transmitted(){//produce data of transmitted wave
@@ -122,24 +123,25 @@ $(window).on('load', function() {//main
             z_square.push(z_row);
             }
         }
-        return z_square
+        return z_square;
     }
 
     function transmit(){//find amplitude of transmitted wave
         let E_t0;
 
         if (isNaN(theta_t) === true){//if snells law return not a number this means total internal refection is occurring hence evanescent waves
-                return E_t0 = E_0//not sure this is correct NEED TO CHECK PHYSICS, what would be the intial amplitude even if its decaying exponentially
+                E_t0 = E_0;
+                return E_t0;//not sure this is correct NEED TO CHECK PHYSICS, what would be the intial amplitude even if its decaying exponentially
         }
         else {
-                E_t0 = E_0 * (2. * n1 * Math.cos(theta_i)) / (n1 * Math.cos(theta_i) + n2 * Math.cos(theta_t))
-            return E_t0//create transmitted wave
+                E_t0 = E_0 * (2 * n1 * Math.cos(theta_i)) / (n1 * Math.cos(theta_i) + n2 * Math.cos(theta_t));
+            return E_t0;//create transmitted wave
         }
-    };
+    }
 
     function reflect() {//find amplitude of reflected wave
         if (n1 === n2) {//if both materials have same refractive index then there is no reflection
-            return 0
+            return 0;
         }
         else {
             let E_r0;
@@ -147,11 +149,11 @@ $(window).on('load', function() {//main
                 E_r0 = E_0;
             }
             else {
-                E_r0 = E_0 * (n1 * Math.cos(theta_i) - n2 * Math.cos(theta_t)) / (n1 * Math.cos(theta_i) + n2 * Math.cos(theta_t))
+                E_r0 = E_0 * (n1 * Math.cos(theta_i) - n2 * Math.cos(theta_t)) / (n1 * Math.cos(theta_i) + n2 * Math.cos(theta_t));
             }
-            return E_r0//create reflected wave
+            return E_r0;//create reflected wave
         }
-    };
+    }
 
     function plot_data() {//plot traces
 
@@ -228,7 +230,7 @@ $(window).on('load', function() {//main
         let opacity_2;
         if((1 < n2) && (n2 <= 15)){
             opacity_1 = 0;
-            opacity_2 = n2/5
+            opacity_2 = n2/5;
         }
         else if((0.1 <= n2) && (n2< 1)){
             opacity_1 = 0.4/n2;
@@ -281,7 +283,7 @@ $(window).on('load', function() {//main
                 mode: "afterall"
             }
         );
-    };
+    }
 
     function play_loop(){//adds time evolution
         if(isPlay === true) {
@@ -297,7 +299,7 @@ $(window).on('load', function() {//main
             requestAnimationFrame(play_loop);//loads next frame
         }
         return 0;
-    };
+    }
 
     function initial() {
         Plotly.purge("graph");
@@ -313,6 +315,6 @@ $(window).on('load', function() {//main
             t = 0;//reset time
             requestAnimationFrame(play_loop);
         });
-    };
+    }
 initial();
 });
