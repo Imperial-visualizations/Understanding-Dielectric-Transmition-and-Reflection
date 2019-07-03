@@ -8,7 +8,7 @@ $(window).on('load', function() {//main
 
         };
     let plt = {//layout of graph
-        layout : {
+        layout : {//layout of 3D graph
             showlegend: false,
             showscale: false,
             margin: {
@@ -29,26 +29,26 @@ $(window).on('load', function() {//main
         },
 
         layoutFres: {//layout of fresnel graph
-                autosize: true,
-                xaxis: {
-                    range: [0, 90],
-                    title: "Angle"
-                },
-                yaxis: {
-                   range: [-1, 2.1]
-                },
-                margin: {
-                   l: 50, r: 10, b: 10, t: 1, pad: 5
-               },
-               legend: {
-                   x: 0, y: 10,
-                   orientation: "h"
-               },
-               font: {
-                   family: "Fira Sans",
-                   size: 16
-               }
+            autosize: true,
+            xaxis: {
+                range: [0, 90],
+                title: "Angle"
+            },
+            yaxis: {
+                range: [-1, 2.1]
+            },
+            margin: {
+                l: 50, r: 10, b: 10, t: 1, pad: 5
+            },
+            legend: {
+                x: 0, y: 10,
+                orientation: "h"
+            },
+            font: {
+                family: "Fira Sans",
+                size: 16
             }
+        }
     };
 
 
@@ -62,13 +62,13 @@ let refractive_ratio   = parseFloat($("input#refractive-index-ratio").val());
 let amplitude   = 0.1;//set amplitude of EM wave
 let angular_frequency  = 4;
 
-let c = 3e8; // Speed of light
+const c = 3e8; // Speed of light
 let w_conversion = 6.92e5; // Factor to make plot wavelength reasonable
 let size = 100;//give number of points
 let z_range = numeric.linspace(0, 1, size);
 
 class Wave{//class handles the creation of waves
-        constructor(theta, E_0, polarisation, w , n1){
+    constructor(theta, E_0, polarisation, w , n1){
         this.theta = theta;
         this.n1 = n1;
         this.E_0 = E_0;
@@ -102,13 +102,12 @@ class Wave{//class handles the creation of waves
 
             rot_E_sine = this.rotate_sinusoid(E_sine, this.theta);//rotate waves to appropriate angle
             rot_B_sine = this.rotate_sinusoid(B_sine, this.theta);
-            }
-        else{
+        }else{
             E_sine = [math.multiply(this.E_0, k_z_sine), zero, z_range];
             B_sine = [zero, math.multiply(this.B_0, k_z_sine), z_range];
             rot_E_sine = this.rotate_sinusoid(E_sine, this.theta);
             rot_B_sine = this.rotate_sinusoid(B_sine, this.theta);
-            }
+        }
 
         let E_trace = [];
 
